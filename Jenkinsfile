@@ -1,12 +1,16 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'docker:24.0.2-cli'  // Choose a tag with Docker CLI
+      args '-v /var/run/docker.sock:/var/run/docker.sock'
+    }
+  }
 
   environment {
-    IMAGE_NAME = 'gaurav6502/sample-node-app' 
+    IMAGE_NAME = 'gaurav6502/sample-node-app'
   }
 
   stages {
-
     stage('Checkout Code') {
       steps {
         checkout scm
@@ -39,15 +43,12 @@ pipeline {
       steps {
         sh '''
           docker pull $IMAGE_NAME
-
           docker stop nodeapp || true
           docker rm nodeapp || true
-
           docker run -d --name nodeapp -p 80:3000 $IMAGE_NAME
         '''
       }
     }
-
   }
 
   post {
