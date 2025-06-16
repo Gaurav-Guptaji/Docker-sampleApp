@@ -8,6 +8,7 @@ pipeline {
 
   environment {
     IMAGE_NAME = 'gaurav6502/sample-node-app'
+    DOCKER_CONFIG = '/tmp/.docker' 
   }
 
   stages {
@@ -19,8 +20,10 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        sh 'export DOCKER_CONFIG=/home/ubuntu/.docker'
-        sh 'docker build -t $IMAGE_NAME .'
+        sh '''
+          mkdir -p $DOCKER_CONFIG
+          docker build -t $IMAGE_NAME .
+        '''
       }
     }
 
@@ -28,6 +31,7 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
           sh '''
+            mkdir -p $DOCKER_CONFIG
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
           '''
         }
