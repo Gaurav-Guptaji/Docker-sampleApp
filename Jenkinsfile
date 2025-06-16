@@ -1,14 +1,14 @@
 pipeline {
   agent {
     docker {
-      image 'docker:latest'  
-      args '-v /var/run/docker.sock:/var/run/docker.sock'
+      image 'docker:latest'
+      args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
 
   environment {
     IMAGE_NAME = 'gaurav6502/sample-node-app'
-    DOCKER_CONFIG = '/tmp/.docker' 
+    DOCKER_CONFIG = '/tmp/.docker'
   }
 
   stages {
