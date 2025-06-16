@@ -19,6 +19,7 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
+        sh 'export DOCKER_CONFIG=$HOME/.docker'
         sh 'docker build -t $IMAGE_NAME .'
       }
     }
